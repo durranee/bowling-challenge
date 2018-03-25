@@ -62,9 +62,10 @@ describe("Scorecard", function() {
     expect(scorecard.getPinsStanding()).toEqual(6);
   });
 
-  it("should return true if spare", function(){
+  it("should turn _spareMode on", function(){
     scorecard.roll(6)
-    expect(scorecard.isSpare(4)).toEqual(true);
+    scorecard.roll(4)
+    expect(scorecard._spareMode).toEqual(true);
   });
 
   it("should return false if no spare", function(){
@@ -91,6 +92,34 @@ describe("Scorecard", function() {
   it("should reset current frame values after 2 rolls", function(){
     scorecard.roll(2);
     scorecard.roll(3);
+    expect(scorecard.getCurrentFrame()).toEqual([]);
+  });
+
+  it("should prepare normal frame before adding to the scoreboard", function(){
+    scorecard.roll(5);
+    scorecard.roll(2);
+    expect(scorecard.getScoreBoard()).toEqual([[5, 2]]);
+  });
+
+  it("should prepare spare frame before adding to the scoreboard", function(){
+    scorecard.roll(2);
+    scorecard.roll(8);
+    expect(scorecard.getScoreBoard()).toEqual([[2, "/"]]);
+  });
+
+  it("should prepare strike frame before adding to the scoreboard", function(){
+    scorecard.roll(10);
+    expect(scorecard.getScoreBoard()).toEqual([["X"]]);
+  });
+
+  it("should reset deduct correct pins from standing pins", function(){
+    scorecard.roll(3);
+    expect(scorecard._pinsStanding).toEqual(7);
+  });
+
+  it("should reset current frame values", function() {
+    scorecard.roll(3);
+    scorecard.roll(2);
     expect(scorecard.getCurrentFrame()).toEqual([]);
   });
 

@@ -9,6 +9,7 @@ function Scorecard() {
   this._pinsStanding = _ALL_PINS;
   this._strikeMode = false;
   this._spareMode = false;
+  this._spareFrametoAdd = 0;
 
 /////////////////////////// GETTERS
 
@@ -42,8 +43,8 @@ function Scorecard() {
     return (_ALL_PINS === pinsDropped && this.getCurrentRollNumber() == 0)
   };
 
-  Scorecard.prototype.isSpare = function (pinsDropped) {
-    return (this._pinsStanding - pinsDropped  === 0 && this.getCurrentRollNumber() == 1)
+  Scorecard.prototype.isSpare = function () {
+    return (this._pinsStanding === 0 && this.getCurrentRollNumber() == 1)
   };
 
 
@@ -76,12 +77,21 @@ function Scorecard() {
 
   Scorecard.prototype.deductPinsAndUpdateFrame = function (pinsDropped) {
     this._pinsStanding -= pinsDropped;
-    // this.addFrameScoreToTotal(pinsDropped);
     this.pushRolltoFrame(pinsDropped);
   };
 
+  Scorecard.prototype.fixFrameBeforepushing = function (frame) {
+      if (frame[0] === 10 )
+        frame[0] = "X";
+      else if(frame.reduce((a, b) => a + b, 0) === 10)
+        frame[1] = "/";
+
+      return frame;
+  };
+
+
   Scorecard.prototype.prepareForNextFrame = function (pinsDropped) {
-    // this.deductPinsAndUpdateFrame(pinsDropped);
+    this._currentFrame = this.fixFrameBeforepushing(this.getCurrentFrame());
     this.pushFrametoScoreBoard(this.getCurrentFrame());
     this.resetRollNumber();
     this._currentFrameNumber++;
@@ -95,26 +105,28 @@ function Scorecard() {
     if (this._currentFrameNumber < _MAXFRAMES) {
 
       // second roll or strike or spare (something that'll trigger new frame)
-      if (this.getCurrentRollNumber() + 1 > 1 || this.isStrike(pinsDropped) || this.isSpare(pinsDropped) ) {
-
+      if (this.getCurrentRollNumber() + 1 > 1 || this.isStrike(pinsDropped) || this.isSpare() ) {
         this.deductPinsAndUpdateFrame(pinsDropped);
+
+        if (this.isSpare()){
+          this._spareFrametoAdd = this._currentFrameNumber + 1;
+          this._spareMode = true
+        }
 
         if(this.isStrike(pinsDropped))
           this._strikeMode = true;
-        if (this.isSpare(pinsDropped))
-          this._spareMode = true
-
 
         if(this._strikeMode && this.getCurrentRollNumber() + 1 > 1){
           this.addFrameScoreToTotal(this._currentFrame);
           this._strikeMode = false;
         }
 
-        // if(this._spareMode && this.getCurrentRollNumber() + 1 > 1){
-        //   console.log("we're in SPARE mode")
-        //   this.addFrameScoreToTotal(this._currentFrame[0]);
-        //   this._spareMode = false;
-        // }
+        if(this._spareMode && this.getCurrentRollNumber() + 1 > 1){
+          if(this._spareFrametoAdd === this._currentFrameNumber){
+            this.addFrameScoreToTotal([this._currentFrame[0],0]);
+            this._spareMode = false;
+          }
+        }
 
         this.addFrameScoreToTotal(this._currentFrame);
         this.prepareForNextFrame(pinsDropped);
