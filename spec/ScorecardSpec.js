@@ -12,4 +12,8 @@ describe("Scorecard", function() {
   it("should return the current frame number", function(){
     expect(scorecard.getFrameNumber()).toEqual(1);
   })
+
+  it("should return current roll number", function() {
+    expect(scorecard.getRollNumber()).toEqual(1);
+  })
 });
