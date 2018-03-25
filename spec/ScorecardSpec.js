@@ -21,8 +21,8 @@ describe("Scorecard", function() {
     expect(scorecard.getCurrentRollNumber()).toEqual(0);
   });
 
-  it("Should add to total score", function(){
-    scorecard.addToTotal(5);
+  it("Should add frame score to total score", function(){
+    scorecard.addFrameScoreToTotal([2,3]);
     expect(scorecard.getTotalScore()).toEqual(5);
   });
 
@@ -33,7 +33,7 @@ describe("Scorecard", function() {
 
   it("should reset roll number back to 0", function(){
     scorecard.roll(10);
-    scorecard.resetRollNumber();
+    // scorecard.resetRollNumber();
     expect(scorecard.getCurrentRollNumber()).toEqual(0);
   });
 

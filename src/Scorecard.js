@@ -7,6 +7,8 @@ function Scorecard() {
   this._currentFrameNumber = 0; // starting from 0... 0-9 (10 frames)
   this._currentRollNumber = 0; // starting from 0 ... 0-1 (2 rolls)
   this._pinsStanding = _ALL_PINS;
+  this._strikeMode = false;
+  this._spareMode = false;
 
 /////////////////////////// GETTERS
 
@@ -37,7 +39,7 @@ function Scorecard() {
 /////////////////////////// QUERIES
 
   Scorecard.prototype.isStrike = function (pinsDropped) {
-    return (this._pinsStanding - pinsDropped  === 0 && this.getCurrentRollNumber() == 0)
+    return (_ALL_PINS === pinsDropped && this.getCurrentRollNumber() == 0)
   };
 
   Scorecard.prototype.isSpare = function (pinsDropped) {
@@ -52,11 +54,12 @@ function Scorecard() {
   };
 
   Scorecard.prototype.pushFrametoScoreBoard = function (frame) {
+    console.log
     this._scoreBoard.push(frame);
   };
 
-  Scorecard.prototype.addToTotal = function (pinsDropped) {
-    this._totalScore += pinsDropped;
+  Scorecard.prototype.addFrameScoreToTotal = function (frame) {
+    this._totalScore += frame.reduce((a, b) => a + b, 0);
   };
 
   Scorecard.prototype.resetPinsStanding = function () {
@@ -73,34 +76,67 @@ function Scorecard() {
 
   Scorecard.prototype.deductPinsAndUpdateFrame = function (pinsDropped) {
     this._pinsStanding -= pinsDropped;
-    this.addToTotal(pinsDropped);
+    // this.addFrameScoreToTotal(pinsDropped);
     this.pushRolltoFrame(pinsDropped);
   };
 
-  Scorecard.prototype.roll = function (pinsDropped) {
-      // second roll of the frame
-    if (this.getCurrentRollNumber() + 1 > 1 && this._currentFrameNumber < _MAXFRAMES) {
-      this.deductPinsAndUpdateFrame(pinsDropped);
-      this.pushFrametoScoreBoard(this.getCurrentFrame());
-      this.resetRollNumber();
-      this._currentFrameNumber++;
-      this.resetFrameValues();
-      this.resetPinsStanding();
-    }
-    else {
-      // first roll of the frame
-      this.deductPinsAndUpdateFrame(pinsDropped);
-      this._currentRollNumber++;
-    }
+  Scorecard.prototype.prepareForNextFrame = function (pinsDropped) {
+    // this.deductPinsAndUpdateFrame(pinsDropped);
+    this.pushFrametoScoreBoard(this.getCurrentFrame());
+    this.resetRollNumber();
+    this._currentFrameNumber++;
+    this.resetFrameValues();
+    this.resetPinsStanding();
   };
 
+  Scorecard.prototype.roll = function (pinsDropped) {
+
+    // still under 9 frames
+    if (this._currentFrameNumber < _MAXFRAMES) {
+
+      // second roll or strike or spare (something that'll trigger new frame)
+      if (this.getCurrentRollNumber() + 1 > 1 || this.isStrike(pinsDropped) || this.isSpare(pinsDropped) ) {
+
+        this.deductPinsAndUpdateFrame(pinsDropped);
+
+        if(this.isStrike(pinsDropped))
+          this._strikeMode = true;
+        if (this.isSpare(pinsDropped))
+          this._spareMode = true
 
 
+        if(this._strikeMode && this.getCurrentRollNumber() + 1 > 1){
+          this.addFrameScoreToTotal(this._currentFrame);
+          this._strikeMode = false;
+        }
 
+        // if(this._spareMode && this.getCurrentRollNumber() + 1 > 1){
+        //   console.log("we're in SPARE mode")
+        //   this.addFrameScoreToTotal(this._currentFrame[0]);
+        //   this._spareMode = false;
+        // }
+
+        this.addFrameScoreToTotal(this._currentFrame);
+        this.prepareForNextFrame(pinsDropped);
+      }
+      else {
+        // normal boring first roll
+        this.deductPinsAndUpdateFrame(pinsDropped);
+        this._currentRollNumber++;
+      }
+
+    }
+
+  }
 
 }
 
 
-// TODO: strike bonus calc
+// TODO:
 // spare bonus calculation
 //  10th round shinanigan
+
+//  some thoughts
+ // have a method for frame finishing, which switches to new frame
+ //  something like prepare for nest frame
+ //  save total only after frame ends and not after every roll
