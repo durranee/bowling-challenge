@@ -37,14 +37,21 @@ describe("Scorecard", function() {
     scorecard.roll(1);
     scorecard.roll(1);
     expect(scorecard.getCurrentFrameNumber()).toEqual(2);
-  })
+  });
 
+  it("shoud not increase frame number after 10 frames", function(){
+    for (var i = 0; i < 30; i++)
+      scorecard.roll(1);
+    expect(scorecard.getCurrentFrameNumber()).toEqual(10);
+  });
 
-    it("shoud not increase frame number after 10 frames", function(){
-      for (var i = 0; i < 30; i++)
-        scorecard.roll(1);
-      expect(scorecard.getCurrentFrameNumber()).toEqual(10);
-    })
+  it("should return true if there's a strike", function(){
+    expect(scorecard.isStrike(10)).toEqual(true);
+  });
+
+  it("should return false if no strike", function(){
+    expect(scorecard.isStrike(8)).toEqual(false);
+  });
 
 
 });

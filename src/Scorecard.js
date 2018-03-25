@@ -26,11 +26,13 @@ function Scorecard() {
       this.resetRollNumber
       this._currentFrameNumber++;
     }
-
   };
 
   Scorecard.prototype.resetRollNumber = function () {
     this._currentRollNumber = 1;
   };
 
+  Scorecard.prototype.isStrike = function (pinsDropped) {
+    return (pinsDropped  === 10 && this.getCurrentRollNumber() == 1)
+  };
 }
