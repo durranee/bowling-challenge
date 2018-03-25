@@ -19,8 +19,12 @@ describe("Scorecard", function() {
 
   it("Should add to total score", function(){
     scorecard.addToTotal(5);
-    expect (scorecard.getTotalScore()).toEqual(5);
+    expect(scorecard.getTotalScore()).toEqual(5);
   });
 
+  it("should increase roll number by 1", function(){
+    scorecard.roll(5);
+    expect(scorecard.getCurrentRollNumber()).toEqual(2);
+  });
 
 });

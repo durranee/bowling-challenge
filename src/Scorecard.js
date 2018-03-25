@@ -13,12 +13,15 @@ function Scorecard() {
   };
 
   Scorecard.prototype.getCurrentRollNumber = function () {
-    return this._currentRollNumber = 1;
+    return this._currentRollNumber;
   };
 
   Scorecard.prototype.addToTotal = function (pinsDropped) {
     this._totalScore = pinsDropped;
   };
 
+  Scorecard.prototype.roll = function (pinsDropped) {
+    this._currentRollNumber++;
+  };
 
 }
