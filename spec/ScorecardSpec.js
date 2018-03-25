@@ -10,10 +10,17 @@ describe("Scorecard", function() {
   });
 
   it("should return the current frame number", function(){
-    expect(scorecard.getFrameNumber()).toEqual(1);
-  })
+    expect(scorecard.getCurrentFrameNumber()).toEqual(1);
+  });
 
   it("should return current roll number", function() {
-    expect(scorecard.getRollNumber()).toEqual(1);
-  })
+    expect(scorecard.getCurrentRollNumber()).toEqual(1);
+  });
+
+  it("Should add to total score", function(){
+    scorecard.addToTotal(5);
+    expect (scorecard.getTotalScore()).toEqual(5);
+  });
+
+
 });
