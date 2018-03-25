@@ -33,4 +33,9 @@ describe("Scorecard", function() {
     expect(scorecard.getCurrentRollNumber()).toEqual(1);
   });
 
+  it("shoud increase frame number by 1 after 2 rolls", function(){
+    scorecard.roll(1);
+    scorecard.roll(1);
+    expect(scorecard.getCurrentFrameNumber()).toEqual(2);
+  })
 });
