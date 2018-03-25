@@ -9,4 +9,7 @@ describe("Scorecard", function() {
     expect (scorecard.getTotalScore()).toEqual(0);
   });
 
+  it("should return the current frame number", function(){
+    expect(scorecard.getFrameNumber()).toEqual(1);
+  })
 });
