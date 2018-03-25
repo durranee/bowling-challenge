@@ -47,12 +47,12 @@ function Scorecard() {
 
 /////////////////////////// SETTERS
 
-  Scorecard.prototype.pushFrametoScoreBoard = function (frame) {
-    this._scoreBoard.push(frame);
-  };
-
   Scorecard.prototype.pushRolltoFrame = function (pinsDropped) {
     this._currentFrame.push(pinsDropped);
+  };
+
+  Scorecard.prototype.pushFrametoScoreBoard = function (frame) {
+    this._scoreBoard.push(frame);
   };
 
   Scorecard.prototype.addToTotal = function (pinsDropped) {
@@ -67,17 +67,27 @@ function Scorecard() {
     this._currentRollNumber = 0;
   };
 
+  Scorecard.prototype.resetFrameValues = function () {
+    this._currentFrame = [];
+  };
+
+
+
   Scorecard.prototype.roll = function (pinsDropped) {
       // second roll of the frame
     if (this.getCurrentRollNumber() + 1 > 1 && this._currentFrameNumber < _MAXFRAMES) {
       this._pinsStanding -= pinsDropped;
+      this.pushRolltoFrame(pinsDropped);
+      this.pushFrametoScoreBoard(this.getCurrentFrame());
       this.resetRollNumber();
       this._currentFrameNumber++;
+      this.resetFrameValues();
       this.resetPinsStanding();
     }
     else {
       // first roll of the frame
       this._pinsStanding -= pinsDropped;
+      this.pushRolltoFrame(pinsDropped);
       this._currentRollNumber++;
     }
   };
