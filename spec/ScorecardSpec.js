@@ -53,5 +53,19 @@ describe("Scorecard", function() {
     expect(scorecard.isStrike(8)).toEqual(false);
   });
 
+  it("should deduct correct pins from pins remaining after roll", function(){
+    scorecard.roll(4);
+    expect(scorecard.getPinsStanding()).toEqual(6);
+  });
+
+  it("should return true if spare", function(){
+    scorecard.roll(6)
+    expect(scorecard.isSpare(4)).toEqual(true);
+  });
+
+  it("should return false if no spare", function(){
+    scorecard.roll(5)
+    expect(scorecard.isSpare(4)).toEqual(false);
+  });
 
 });
