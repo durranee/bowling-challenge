@@ -22,7 +22,7 @@ function Scorecard() {
 
   Scorecard.prototype.roll = function (pinsDropped) {
     this._currentRollNumber++;
-    if (this._currentRollNumber > 2 ) {
+    if (this._currentRollNumber > 2 && this._currentFrameNumber < 10) {
       this.resetRollNumber
       this._currentFrameNumber++;
     }
