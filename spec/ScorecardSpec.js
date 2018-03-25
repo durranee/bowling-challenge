@@ -9,7 +9,7 @@ describe("Scorecard", function() {
     expect (scorecard.getScoreBoard()).toEqual([]);
   });
 
-  it("Should return total score", function(){
+  it("Should start with total score of 0", function(){
     expect (scorecard.getTotalScore()).toEqual(0);
   });
 
@@ -86,6 +86,12 @@ describe("Scorecard", function() {
   it("should push frame score card to scoreboard", function(){
     scorecard.pushFrametoScoreBoard([2, 5]);
     expect(scorecard.getScoreBoard()).toContain([2, 5]);
+  });
+
+  it("should reset current frame values after 2 rolls", function(){
+    scorecard.roll(2);
+    scorecard.roll(3);
+    expect(scorecard.getCurrentFrame()).toEqual([]);
   });
 
 });

@@ -56,7 +56,7 @@ function Scorecard() {
   };
 
   Scorecard.prototype.addToTotal = function (pinsDropped) {
-    this._totalScore = pinsDropped;
+    this._totalScore += pinsDropped;
   };
 
   Scorecard.prototype.resetPinsStanding = function () {
@@ -71,13 +71,16 @@ function Scorecard() {
     this._currentFrame = [];
   };
 
-
+  Scorecard.prototype.deductPinsAndUpdateFrame = function (pinsDropped) {
+    this._pinsStanding -= pinsDropped;
+    this.addToTotal(pinsDropped);
+    this.pushRolltoFrame(pinsDropped);
+  };
 
   Scorecard.prototype.roll = function (pinsDropped) {
       // second roll of the frame
     if (this.getCurrentRollNumber() + 1 > 1 && this._currentFrameNumber < _MAXFRAMES) {
-      this._pinsStanding -= pinsDropped;
-      this.pushRolltoFrame(pinsDropped);
+      this.deductPinsAndUpdateFrame(pinsDropped);
       this.pushFrametoScoreBoard(this.getCurrentFrame());
       this.resetRollNumber();
       this._currentFrameNumber++;
@@ -86,8 +89,7 @@ function Scorecard() {
     }
     else {
       // first roll of the frame
-      this._pinsStanding -= pinsDropped;
-      this.pushRolltoFrame(pinsDropped);
+      this.deductPinsAndUpdateFrame(pinsDropped);
       this._currentRollNumber++;
     }
   };
@@ -97,3 +99,8 @@ function Scorecard() {
 
 
 }
+
+
+// TODO: strike bonus calc
+// spare bonus calculation
+//  10th round shinanigan
