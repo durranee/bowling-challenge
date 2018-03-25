@@ -24,4 +24,8 @@ function Scorecard() {
     this._currentRollNumber++;
   };
 
+  Scorecard.prototype.resetRollNumber = function () {
+    this._currentRollNumber = 1;
+  };
+
 }

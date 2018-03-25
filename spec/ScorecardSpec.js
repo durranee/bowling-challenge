@@ -27,4 +27,10 @@ describe("Scorecard", function() {
     expect(scorecard.getCurrentRollNumber()).toEqual(2);
   });
 
+  it("should reset roll number back to 1", function(){
+    scorecard.roll(10);
+    scorecard.resetRollNumber();
+    expect(scorecard.getCurrentRollNumber()).toEqual(1);
+  });
+
 });
